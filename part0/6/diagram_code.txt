@@ -1,0 +1,21 @@
+note over browser:
+browser fires js event 
+that handles form submit event
+
+js event handler rerenders note list 
+and sends new data to the server
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+server responds with the status code 
+which means that new note was 
+successfully created on the server
+end note
+
+server-->browser: 201 Created
+
+note over browser:
+no redirects or page refreshes here!
+end note
