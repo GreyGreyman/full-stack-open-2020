@@ -6,6 +6,7 @@ const app = express()
 const PORT = process.env.PORT || 3001
 
 
+app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
@@ -37,10 +38,6 @@ let persons = [
     id: 4
   }
 ]
-
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
 
 app.get('/info', (request, response) => {
   const date = new Date()
