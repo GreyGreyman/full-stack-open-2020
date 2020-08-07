@@ -1,3 +1,5 @@
+This directory contains revised frontend for phonebook application from the part 2 of the Full Stack Open Course.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

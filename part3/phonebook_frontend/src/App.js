@@ -43,6 +43,9 @@ const App = () => {
             setNewNumber('')
             notificationHelper(`${data.name}'s old number replaced to ${data.number}`, 'success')
           })
+          .catch(error => {
+            notificationHelper(error.response.data.error, 'error')
+          })
       }
       return
     }
@@ -60,11 +63,13 @@ const App = () => {
         setNewNumber('')
         notificationHelper(`Added ${returnedPerson.name}`, 'success')
       })
+      .catch(error => {
+        notificationHelper(error.response.data.error, 'error')
+      })
   }
 
 
   const handlePersonDelete = personToDelete => {
-    console.log(`lets delete ${personToDelete.name}`)
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       personServices
         .remove(personToDelete.id)
