@@ -1,15 +1,30 @@
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 const app = require('../app')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 
+let testToken = null
+
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
 
-  for (const blog of helper.initialBlogs) {
+  const user = new User({
+    username: 'test',
+    passwordHash: 'pest'
+  })
+
+  const testUser = await user.save()
+  testToken = jwt.sign({ username: testUser.username, id: user._id }, process.env.SECRET)
+
+  const initialBlogs = helper.initialBlogs.map(blog => ({ ...blog, user: testUser._id }))
+
+  for (const blog of initialBlogs) {
     const blogObject = new Blog(blog)
     await blogObject.save()
   }
@@ -51,6 +66,7 @@ describe('POST', () => {
     }
     let response = await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${testToken}`)
       .send(newBlog)
       .expect(201)
     expect(response.body).toMatchObject(newBlog)
@@ -71,6 +87,7 @@ describe('POST', () => {
 
     let response = await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${testToken}`)
       .send(newBlog)
       .expect(201)
 
@@ -89,6 +106,7 @@ describe('POST', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${testToken}`)
       .send(newBlog)
       .expect(400)
   })
@@ -102,15 +120,30 @@ describe('POST', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${testToken}`)
       .send(newBlog)
       .expect(400)
+  })
+
+  test('fails with 401 if token is not provided', async () => {
+    const newBlog = {
+      title: 'test',
+      author: 'pest',
+      url: 'testurl',
+      likes: 42,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
   })
 })
 
 describe('GET /id', () => {
   test('succeed with a valid id and found', async () => {
-    const blogs = await helper.blogsInDB()
-    const specificBlog = blogs[0]
+    let specificBlog = await Blog.findOne({}).populate('user', { username: 1, name: 1, id: 1 })
+    specificBlog = specificBlog.toJSON()
 
     const returnedBlog = await api
       .get(`/api/blogs/${specificBlog.id}`)
@@ -135,9 +168,11 @@ describe('GET /id', () => {
 
 describe('PUT', () => {
   test('succeed with 200 if valid and found', async () => {
-    const blogsInDB = await helper.blogsInDB()
-    let modifiedBlog = blogsInDB[0]
-    modifiedBlog.likes += 1
+
+    const blog = await Blog.findOne({})
+    blog.likes += 1
+    const modifiedBlog = blog.toJSON()
+    modifiedBlog.user = modifiedBlog.user.toString()
 
     const response = await api
       .put(`/api/blogs/${modifiedBlog.id}`)
@@ -146,7 +181,6 @@ describe('PUT', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body).toEqual(modifiedBlog)
-    expect(blogsInDB).toContainEqual(expect.objectContaining(modifiedBlog))
   })
 
   test('fail with 400 if data is invalid', async () => {
@@ -192,6 +226,7 @@ describe('DELETE', () => {
     const blogToDelete = blogsBefore[0]
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `bearer ${testToken}`)
       .expect(204)
 
     const blogsAfter = await helper.blogsInDB()
@@ -203,6 +238,7 @@ describe('DELETE', () => {
     const blogsBefore = await helper.blogsInDB()
     await api
       .delete('/api/blogs/invalidID')
+      .set('Authorization', `bearer ${testToken}`)
       .expect(400)
 
     const blogsAfter = await helper.blogsInDB()

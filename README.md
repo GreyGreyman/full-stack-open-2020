@@ -23,8 +23,10 @@ This year's edition of the course contains a new part on TypeScript. Content for
 - [phonebook](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part2/phonebook)
 
 ### Part 3: [Programming a server with NodeJS and Express](https://fullstackopen.com/en/part3)
-
 - [phonebook backend](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part3/phonebook_backend)
 - [phonebook frontend (updated for part3)](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part3/phonebook_frontend)
 
     Working application for part 3 can be found deployed at heroku [here](https://sheltered-sierra-81794.herokuapp.com/)
+
+### Part 4: [Testing Express servers, user administration](https://fullstackopen.com/en/part4)
+- [bloglist](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part4/bloglist)
