@@ -29,4 +29,7 @@ This year's edition of the course contains a new part on TypeScript. Content for
     Working application for part 3 can be found deployed at heroku [here](https://sheltered-sierra-81794.herokuapp.com/)
 
 ### Part 4: [Testing Express servers, user administration](https://fullstackopen.com/en/part4)
-- [bloglist](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part4/bloglist)
+- [bloglist backend](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part4/bloglist)
+
+### Part 5: [Testing React apps](https://fullstackopen.com/en/part5)
+- [bloglist frontend](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part5/bloglist-frontend)
