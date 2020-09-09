@@ -1,0 +1,24 @@
+.notification {
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.notification_error {
+  color: red;
+}
+
+.notification_success {
+  color: green;
+}
+
+.details {
+  display: none;
+}
+
+.details_visible {
+  display: block;
+}
