@@ -26,7 +26,7 @@ blogsRouter.post('/', async (request, response) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-
+  await savedBlog.populate('user', { username: 1, name: 1, id: 1 }).execPopulate()
   response.status(201).json(savedBlog)
 })
 
@@ -42,14 +42,10 @@ blogsRouter.get('/:id', async (request, response) => {
 
 
 blogsRouter.put('/:id', async (request, response) => {
-  const blog = {
-    author: request.body.author,
-    title: request.body.title,
-    url: request.body.url,
-    likes: request.body.likes || 0
-  }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true })
+  const updatedBlog =
+    await Blog.findByIdAndUpdate(request.params.id, request.body, { new: true, runValidators: true })
+      .populate('user', { username: 1, name: 1, id: 1 })
 
   if (updatedBlog) {
     response.json(updatedBlog)
@@ -62,12 +58,17 @@ blogsRouter.put('/:id', async (request, response) => {
 blogsRouter.delete('/:id', async (request, response) => {
   const token = jwt.verify(request.token, process.env.SECRET)
 
+  const user = await User.findById(token.id)
   const blog = await Blog.findById(request.params.id)
-  if (token.id !== blog.user.toString()) {
+  if (user.id.toString() !== blog.user.toString()) {
     return response.status(403).json({ error: 'unauthorized deletion' })
   }
 
   await Blog.findByIdAndDelete(request.params.id)
+
+  user.blogs = user.blogs.filter(b => b.id.toString() !== request.params.id.toString())
+  await user.save()
+
   response.status(204).end()
 })
 

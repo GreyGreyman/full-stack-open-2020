@@ -23,7 +23,6 @@ const blogSchema = new mongoose.Schema({
 blogSchema.set('toJSON', {
   versionKey: false,
   transform: (doc, ret) => {
-    console.log(ret)
     ret.id = ret._id.toString()
     delete ret._id
   }
