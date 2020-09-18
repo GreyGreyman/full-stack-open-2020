@@ -33,3 +33,7 @@ This year's edition of the course contains a new part on TypeScript. Content for
 
 ### Part 5: [Testing React apps](https://fullstackopen.com/en/part5)
 - [bloglist frontend](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part5/bloglist-frontend)
+
+### Part 6: [State management with Redux](https://fullstackopen.com/en/part6)
+- [redux-anecdotes](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part6/redux-anecdotes)
+- [unicafe-redux](https://github.com/GreyGreyman/full-stack-open-2020/tree/master/part6/unicafe-redux)
