@@ -7,24 +7,14 @@ const reducer = (state = '', action) => {
   }
 }
 
-// dispatch(setNotification(`you voted "${anecdote.content}"`))
-// setTimeout(() => {
-//   dispatch(setNotification(''))
-// }, 5000);
-
-// export const setNotification = notification => {
-//   return {
-//     type: 'SET_NOTIFICATION',
-//     notification
-//   }
-// }
-
+let clearTimeoutID
 export const setNotification = notification => dispatch => {
+  clearTimeout(clearTimeoutID)
   dispatch({
     type: 'SET_NOTIFICATION',
     notification
   })
-  setTimeout(() => {
+  clearTimeoutID = setTimeout(() => {
     dispatch({
       type: 'SET_NOTIFICATION',
       notification: ''
